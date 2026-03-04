@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ngopi — discover your favorite coffee. A sanctuary for unwinding where mornings are perfected with rich flavors.">
+
+    <!-- ── SEO & Discoverability ──────────────────────────────── -->
+    <!-- Canonical URL: tells Google the authoritative address for this page.
+         Update to the live domain before deploying. -->
+    <link rel="canonical" href="https://ngopi.com/">
+
+    <!-- Open Graph: controls link previews on Facebook, LinkedIn, iMessage, etc. -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://ngopi.com/">
+    <meta property="og:title"       content="Ngopi | Enjoy Your Favorite Coffee">
+    <meta property="og:description" content="Discover tranquility at Ngopi — a sanctuary for unwinding where mornings are perfected with rich flavors.">
+    <meta property="og:image"       content="https://ngopi.com/og-image.jpg">
+    <meta property="og:locale"      content="en_US">
+
+    <!-- Twitter Card: controls link previews on Twitter / X -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="Ngopi | Enjoy Your Favorite Coffee">
+    <meta name="twitter:description" content="Discover tranquility at Ngopi — a sanctuary for unwinding where mornings are perfected with rich flavors.">
+    <meta name="twitter:image"       content="https://ngopi.com/og-image.jpg">
+
+    <!-- ── Favicon & Platform Icons ──────────────────────────────
+         Convention: all icon assets live under /static/icons/.
+         Generated via https://realfavicongenerator.net/
+         Note: <link rel="manifest"> is intentionally omitted per
+         the JH convention (the default manifest carries extra data). -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png">
+    <!-- mask-icon: monochrome SVG used by Safari pinned tabs; colour = brand primary -->
+    <link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg" color="#6D1600">
+    <meta name="apple-mobile-web-app-title" content="Ngopi">
+    <meta name="application-name"           content="Ngopi">
+    <!-- msapplication-TileColor: Windows Start tile background colour -->
+    <meta name="msapplication-TileColor" content="#6D1600">
+    <!-- theme-color: browser chrome colour on Android / PWA splash screen -->
+    <meta name="theme-color" content="#6D1600">
+
+    <!-- JSON-LD Structured Data: helps Google understand and display rich
+         results (business info, opening hours, etc.) for local searches -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CafeOrCoffeeShop",
+      "name": "Ngopi",
+      "description": "A sanctuary for unwinding where mornings are perfected with rich flavors.",
+      "url": "https://ngopi.com",
+      "email": "hello@ngopi.com",
+      "telephone": "+123456789",
+      "servesCuisine": "Coffee"
+    }
+    </script>
+    <title>Ngopi | Enjoy Your Favorite Coffee</title>
+    <!-- Preconnect reduces DNS + TLS setup time for the Google Fonts CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Single request loads all 5 font families — fewer HTTP round-trips.
+         <link> loads non-blocking in parallel; @import in CSS is render-blocking. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display+SC:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600&family=Poppins:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="header">
+        <nav class="nav container" aria-label="Main navigation">
+            <a href="#" class="logo" aria-label="Ngopi home">
+                <i class="fa-solid fa-mug-hot" aria-hidden="true"></i> Ngopi
+            </a>
+            <!-- nav-links id is required by the hamburger aria-controls attribute -->
+            <ul class="nav-links" id="nav-links">
+                <!-- "Products" has a dropdown submenu for category quick-access -->
+                <li class="has-dropdown">
+                    <a href="#products" aria-haspopup="true" aria-expanded="false">
+                        Products <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </a>
+                    <ul class="dropdown" aria-label="Product categories">
+                        <li><a href="#products">Latte</a></li>
+                        <li><a href="#products">Robusta</a></li>
+                        <li><a href="#products">Arabica</a></li>
+                    </ul>
+                </li>
+                <li><a href="#about">About us</a></li>
+                <li><a href="#testimonials">Testimonial</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <!-- data-tooltip powers the pure-CSS tooltip (see styles.css) -->
+                <button aria-label="Search" data-tooltip="Search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+                <button aria-label="Cart" data-tooltip="Cart"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i></button>
+            </div>
+
+            <!-- Hamburger: visible only on mobile, controls #nav-links -->
+            <button
+                class="hamburger"
+                aria-label="Toggle menu"
+                aria-expanded="false"
+                aria-controls="nav-links"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Hero -->
+        <section class="hero container" aria-labelledby="hero-heading">
+            <h1 id="hero-heading">Enjoy Your Favorite Coffee with Ngopi</h1>
+            <p>Discover tranquility at Ngopi — a sanctuary for unwinding, <br>where your mornings are perfected with relaxation and rich flavors.</p>
+            <a href="#products" class="btn">Explore Product <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></a>
+            <div class="hero-images" aria-hidden="true">
+                <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=600&fit=crop" class="hero-img shape-1" alt="Coffee beans" fetchpriority="high">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=600&fit=crop" class="hero-img shape-2" alt="Pouring coffee">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=600&fit=crop" class="hero-img shape-1" alt="Coffee cup">
+                <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=600&fit=crop" class="hero-img shape-2" alt="Drip coffee">
+                <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=600&fit=crop" class="hero-img shape-1" alt="Barista pouring">
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats container" aria-label="Key statistics">
+            <div class="stat-item">
+                <strong>30+</strong>
+                <p>Coffee Variant</p>
+            </div>
+            <div class="stat-item">
+                <strong>20+</strong>
+                <p>Meeting room</p>
+            </div>
+            <div class="stat-item">
+                <strong>25+</strong>
+                <p>Event space</p>
+            </div>
+            <div class="stat-item">
+                <strong>40+</strong>
+                <p>Global Achievement</p>
+            </div>
+        </section>
+
+        <!-- Products -->
+        <section id="products" class="products container" aria-labelledby="products-heading">
+            <p class="section-label">Our products</p>
+            <h2 id="products-heading" class="section-title">From Top Quality Materials</h2>
+
+            <div class="filter-tabs" role="tablist" aria-label="Filter by category">
+                <button class="filter-btn active" role="tab" aria-selected="true">Latte</button>
+                <button class="filter-btn" role="tab" aria-selected="false">Robusta</button>
+                <button class="filter-btn" role="tab" aria-selected="false">Arabica</button>
+            </div>
+
+            <ul class="product-grid">
+                <li>
+                    <article class="product-card">
+                        <img src="https://images.unsplash.com/photo-1534687941688-651ccaafbff8?w=400&h=300&fit=crop" alt="Chocolate Latte" loading="lazy">
+                        <h3 class="product-title">Chocolate Latte</h3>
+                        <p class="rating"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>(200 reviews)</span></p>
+                        <p class="product-desc">Scelerisque urna vel sit dolor fringilla volutpat lectus amet.</p>
+                        <footer class="product-bottom">
+                            <span class="price">$3.9</span>
+                            <button class="add-btn" aria-label="Add Chocolate Latte to cart"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+                        </footer>
+                    </article>
+                </li>
+                <li>
+                    <article class="product-card">
+                        <img src="https://images.unsplash.com/photo-1485808191679-5f86510bd9d4?w=400&h=300&fit=crop" alt="Mocha Latte" loading="lazy">
+                        <h3 class="product-title">Mocha Latte</h3>
+                        <p class="rating"><i class="fa-solid fa-star" aria-hidden="true"></i> 5.0 <span>(150 reviews)</span></p>
+                        <p class="product-desc">Scelerisque urna vel sit dolor fringilla volutpat lectus amet.</p>
+                        <footer class="product-bottom">
+                            <span class="price">$2.7</span>
+                            <button class="add-btn" aria-label="Add Mocha Latte to cart"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+                        </footer>
+                    </article>
+                </li>
+                <li>
+                    <article class="product-card">
+                        <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&h=300&fit=crop" alt="Coffee Latte" loading="lazy">
+                        <h3 class="product-title">Coffee Latte</h3>
+                        <p class="rating"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>(300 reviews)</span></p>
+                        <p class="product-desc">Scelerisque urna vel sit dolor fringilla volutpat lectus amet.</p>
+                        <footer class="product-bottom">
+                            <span class="price">$2.9</span>
+                            <button class="add-btn" aria-label="Add Coffee Latte to cart"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+                        </footer>
+                    </article>
+                </li>
+                <li>
+                    <article class="product-card">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop" alt="Hazelnut Latte" loading="lazy">
+                        <h3 class="product-title">Hazelnut Latte</h3>
+                        <p class="rating"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>(120 reviews)</span></p>
+                        <p class="product-desc">Scelerisque urna vel sit dolor fringilla volutpat lectus amet.</p>
+                        <footer class="product-bottom">
+                            <span class="price">$2.8</span>
+                            <button class="add-btn" aria-label="Add Hazelnut Latte to cart"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+                        </footer>
+                    </article>
+                </li>
+            </ul>
+
+            <div class="dots" aria-label="Page indicators">
+                <button class="dot active" aria-label="Page 1"></button>
+                <button class="dot" aria-label="Page 2"></button>
+                <button class="dot" aria-label="Page 3"></button>
+                <button class="dot" aria-label="Page 4"></button>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="about container" aria-labelledby="about-heading">
+            <p class="section-label">About us</p>
+            <h2 id="about-heading" class="section-title">Why we are the best</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet. Integer sed pretium odio lectus at malesuada sed eget nunc. Viverra malesuada viverra id vel tortor dui adipiscing.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet. Integer sed pretium odio lectus at malesuada sed eget nunc.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet.</p>
+                    <a href="#" class="btn">Read More <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <!-- Images are informative (barista, coffee) so aria-hidden is removed -->
+                <div class="about-images">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=500&fit=crop" alt="Barista making coffee" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=550&fit=crop" alt="Coffee beans close-up" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="testimonials" class="testimonials container" aria-labelledby="testimonials-heading">
+            <p class="section-label">Testimonial</p>
+            <h2 id="testimonials-heading" class="section-title">What our buyers say</h2>
+
+            <ul class="testimonial-grid">
+                <li>
+                    <article class="testimonial-card">
+                        <header class="user-info">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Michael Wong" loading="lazy">
+                            <div>
+                                <h3>Michael Wong</h3>
+                                <p class="user-stars" aria-label="5 out of 5 stars">
+                                    <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i>
+                                </p>
+                            </div>
+                        </header>
+                        <blockquote>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet. Integer sed pretium odio lectus at malesuada sed eget nunc. Viverra malesuada viverra id vel tortor dui adipiscing.</blockquote>
+                    </article>
+                </li>
+                <li>
+                    <article class="testimonial-card">
+                        <header class="user-info">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Avril Song" loading="lazy">
+                            <div>
+                                <h3>Avril Song</h3>
+                                <p class="user-stars" aria-label="4 out of 5 stars">
+                                    <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-regular fa-star" aria-hidden="true"></i>
+                                </p>
+                            </div>
+                        </header>
+                        <blockquote>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet. Integer sed pretium odio lectus at malesuada sed eget nunc.</blockquote>
+                    </article>
+                </li>
+                <li>
+                    <article class="testimonial-card">
+                        <header class="user-info">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face" alt="Joanna Wood" loading="lazy">
+                            <div>
+                                <h3>Joanna Wood</h3>
+                                <p class="user-stars" aria-label="4 out of 5 stars">
+                                    <i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-regular fa-star" aria-hidden="true"></i>
+                                </p>
+                            </div>
+                        </header>
+                        <blockquote>Lorem ipsum dolor sit amet consectetur. Scelerisque urna vel sit dolor fringilla volutpat lectus amet. Integer sed pretium odio lectus at malesuada sed eget nunc. Viverra malesuada viverra id vel tortor dui adipiscing.</blockquote>
+                    </article>
+                </li>
+            </ul>
+
+            <div class="dots" aria-label="Page indicators">
+                <button class="dot active" aria-label="Page 1"></button>
+                <button class="dot" aria-label="Page 2"></button>
+                <button class="dot" aria-label="Page 3"></button>
+                <button class="dot" aria-label="Page 4"></button>
+            </div>
+        </section>
+
+        <!-- Blog -->
+        <section id="blog" class="blog container" aria-labelledby="blog-heading">
+            <p class="section-label">Blog</p>
+            <h2 id="blog-heading" class="section-title">Read our articles</h2>
+
+            <ul class="blog-grid">
+                <li>
+                    <article class="blog-card">
+                        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=250&fit=crop" alt="Coffee shop interior" loading="lazy">
+                        <p class="blog-meta">
+                            <span><i class="fa-regular fa-user" aria-hidden="true"></i> Jane Doe</span>
+                            <time datetime="2024-02-23"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Feb 23, 2024</time>
+                        </p>
+                        <h3 class="blog-title">Lorem ipsum dolor sit amet consectetur. Est tempor morbi pellentesque.</h3>
+                        <a href="#" class="read-more">View details <i class="fa-solid fa-angle-right" aria-hidden="true"></i></a>
+                    </article>
+                </li>
+                <li>
+                    <article class="blog-card">
+                        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&h=250&fit=crop" alt="Coffee brewing process" loading="lazy">
+                        <p class="blog-meta">
+                            <span><i class="fa-regular fa-user" aria-hidden="true"></i> John Doe</span>
+                            <time datetime="2024-02-20"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Feb 20, 2024</time>
+                        </p>
+                        <h3 class="blog-title">Lorem ipsum dolor sit amet consectetur. Est tempor morbi pellentesque.</h3>
+                        <a href="#" class="read-more">View details <i class="fa-solid fa-angle-right" aria-hidden="true"></i></a>
+                    </article>
+                </li>
+                <li>
+                    <article class="blog-card">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=250&fit=crop" alt="Barista at work" loading="lazy">
+                        <p class="blog-meta">
+                            <span><i class="fa-regular fa-user" aria-hidden="true"></i> Jane Doe</span>
+                            <time datetime="2024-02-15"><i class="fa-regular fa-calendar" aria-hidden="true"></i> Feb 15, 2024</time>
+                        </p>
+                        <h3 class="blog-title">Lorem ipsum dolor sit amet consectetur. Est tempor morbi pellentesque.</h3>
+                        <a href="#" class="read-more">View details <i class="fa-solid fa-angle-right" aria-hidden="true"></i></a>
+                    </article>
+                </li>
+            </ul>
+
+            <div class="blog-center-btn">
+                <a href="#" class="btn">Read More <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="contact" class="footer">
+        <div class="footer-grid container">
+
+            <!-- Brand column: logo + description + contact
+                 grid-row spans 2 rows so it aligns with both the
+                 nav columns (row 1) AND the subscribe form (row 2) -->
+            <section class="footer-brand" aria-label="Brand info">
+                <div class="footer-brand-info">
+                    <p class="footer-logo">
+                        <i class="fa-solid fa-shield" aria-hidden="true"></i> Ngopi
+                    </p>
+                    <p class="footer-desc">Discover tranquility at Ngopi — a sanctuary for unwinding, where your mornings are perfected with relaxation and rich flavors.</p>
+                </div>
+                <address class="footer-contact">
+                    <a href="mailto:hello@ngopi.com">hello@ngopi.com</a>
+                    <a href="tel:+123456789">Phone: +123 456 789</a>
+                </address>
+            </section>
+    
+            <nav aria-label="Quick Links">
+                <h4 class="footer-heading">Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Portfolio</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Testimonial</a></li>
+                </ul>
+            </nav>
+
+            <nav aria-label="Resources">
+                <h4 class="footer-heading">Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                </ul>
+            </nav>
+
+            <section aria-label="Social media">
+                <h4 class="footer-heading">Social Media</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                </div>
+            </section>
+
+            <section class="subscribe-box" aria-label="Newsletter signup">
+                <h4 class="footer-heading">Subscribe</h4>
+                <form class="subscribe-form" novalidate>
+                    <label for="subscribe-email" class="sr-only">Email address</label>
+                    <div class="subscribe-input-wrapper">
+                        <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                        <input type="email" id="subscribe-email" placeholder="name@domain.com" autocomplete="email">
+                    </div>
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

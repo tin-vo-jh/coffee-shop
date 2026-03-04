@@ -1,0 +1,1190 @@
+/* Fonts are loaded via a combined <link rel="stylesheet"> in <head>.
+   <link> loads in parallel with HTML parsing; @import is render-blocking. */
+
+
+/* ── 1. CSS Custom Properties ───────────────────────────────
+   All colours and font stacks are defined here so changing
+   the brand palette only ever needs one edit.
+──────────────────────────────────────────────────────────── */
+:root {
+    /* Brand colours */
+    --primary-color  : #6D1600;                 /* dark espresso red */
+    --primary-hover  : #5e1f0c;                 /* slightly darker on hover */
+    --primary-shadow : rgba(109, 22, 0, 0.28);  /* glow used in button hover */
+
+    /* Text colours. */
+    --text-dark      : #282A3A;
+
+    /* Surfaces */
+    --bg-light     : #F6F6F6;   /* filter tabs, muted fills */
+    --footer-bg    : #2b2d3c;   /* dark navy-charcoal footer */
+    --white        : #ffffff;
+    --border-color : #eaeaea;   /* hairline borders / separators */
+
+    /* Component tokens — prevents magic numbers scattered through the file */
+    --color-star      : #f5b301;   /* star rating yellow */
+    --color-dot       : #D9D9D9;   /* inactive pagination dot */
+    --color-dot-hover : #BFBFBF;   /* hovered inactive dot */
+
+    /* Fonts */
+    --font-serif : 'Playfair Display', serif;
+    --font-sans  : 'Inter', sans-serif;
+
+    /* Transition — explicit properties only; avoids triggering layout reflows
+       that `transition: all` would cause on every animated element. */
+    --transition : color 0.25s ease, background-color 0.25s ease,
+                   transform 0.25s ease, box-shadow 0.25s ease,
+                   opacity 0.25s ease;
+}
+
+
+/* ── 2. CSS Reset & Base ────────────────────────────────────
+   Box-sizing: border-box makes width/height calculations
+   predictable — padding is included in the declared size.
+──────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    margin     : 0;
+    padding    : 0;
+    box-sizing : border-box;
+}
+
+body {
+    font-family : var(--font-sans);
+    color       : var(--text-dark);
+    background  : var(--white);
+    line-height : 1.6;
+    /* Prevent horizontal scroll caused by 100vw elements */
+    overflow-x  : hidden;
+}
+
+/* Smooth scroll + padding prevents the sticky header from
+   covering anchor targets when in-page hash links are clicked */
+html {
+    scroll-behavior    : smooth;
+    scroll-padding-top : 80px;   /* matches desktop header height */
+}
+
+a   { text-decoration : none; color : inherit; }
+ul  { list-style : none; }
+img { max-width : 100%; display : block; }
+
+/* Centred content wrapper used by every section */
+.container {
+    max-width : 1200px;
+    margin    : 0 auto;
+    padding   : 0 20px;
+}
+
+/* ── 2b. Focus-Visible Styles ──────────────────────────────────
+   :focus-visible fires ONLY for keyboard navigation (Tab key),
+   not on mouse clicks — satisfies WCAG 2.4.7 (Focus Visible)
+   without adding distracting outlines on every mouse interaction.
+─────────────────────────────────────────────────────────────── */
+:focus-visible {
+    outline        : 3px solid var(--primary-color);
+    outline-offset : 3px;
+    border-radius  : 3px;
+}
+/* Subscribe form wrapper highlights when its internal input is focused */
+.subscribe-form:focus-within {
+    outline        : 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset : 2px;
+    border-radius  : 8px;
+}
+
+
+/* ── 3. Typography Utilities ────────────────────────────────
+   Shared heading defaults — overridden per-section where
+   the Figma spec differs.
+──────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5 {
+    font-family : var(--font-serif);
+    font-weight : 600;
+    color       : var(--text-dark);
+}
+
+/*
+   Unified base rules — match what every section actually uses.
+   The per-section .products/.about/.testimonials/.blog overrides
+   have been removed; there is now one source of truth here.
+*/
+.section-label {
+    font-family    : var(--font-sans);
+    font-weight    : 400;
+    font-size      : 1.5rem;    /* 24px */
+    line-height    : 1.2;
+    text-transform : none;
+    color          : var(--text-dark);
+    text-align     : center;
+    margin-bottom  : 8px;
+}
+.section-title {
+    font-family   : var(--font-serif);
+    font-weight   : 400;
+    font-size     : 2.25rem;   /* 36px */
+    line-height   : 1.2;
+    text-align    : center;
+    margin-bottom : 40px;
+}
+
+
+/* ── 4. Button (.btn) ───────────────────────────────────────
+   Used for "Explore Product", "Read More", "Add to Cart" CTAs.
+   border-radius: 0 32px 0 32px creates the signature diagonal
+   rounded-corner shape from the Figma design.
+──────────────────────────────────────────────────────────── */
+.btn {
+    display         : inline-flex;
+    align-items     : center;
+    justify-content : center;
+    gap             : 16px;
+    background-color: var(--primary-color);
+    color           : var(--white);
+    padding         : 24px 48px;
+    border          : none;
+    border-radius   : 0 32px 0 32px;
+    cursor          : pointer;
+    transition      : var(--transition);
+
+    /* Figma typography: Playfair Display SC Regular 24px */
+    font-family     : 'Playfair Display SC', serif;
+    font-weight     : 400;
+    font-size       : 24px;
+    line-height     : 1.4;
+    letter-spacing  : 0;
+    /* text-transform:none overrides any inherited uppercase rules */
+    text-transform  : none;
+}
+
+
+/* ── 5. Navigation / Header ─────────────────────────────────
+   Sticky header sits at z-index 100 so it overlaps all
+   content sections while scrolling.
+   .header.scrolled is toggled by JS (see script.js) to add
+   the floating shadow when the user scrolls past 10px.
+──────────────────────────────────────────────────────────── */
+.header {
+    padding       : 20px 80px;
+    background    : var(--white);
+    position      : sticky;
+    top           : 0;
+    z-index       : 100;
+    border-bottom : 1px solid var(--border-color);
+    /* Smooth transition for the scrolled shadow */
+    transition    : box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.nav {
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+    gap             : 56px;
+}
+
+/* Brand wordmark */
+.logo {
+    font-family : var(--font-serif);
+    font-size   : 1.5rem;
+    font-weight : 700;
+    color       : var(--primary-color);
+    display     : flex;
+    align-items : center;
+    gap         : 10px;
+    /* Prevent logo from shrinking when nav is tight */
+    flex-shrink : 0;
+}
+
+/* Horizontal nav link list (desktop) */
+.nav-links {
+    display : flex;
+    gap     : 30px;
+}
+.nav-links a {
+    font-size   : 20px;
+    font-weight : 400;
+    color       : var(--text-muted);
+    transition  : var(--transition);
+}
+.nav-links a:hover { color : var(--primary-color); }
+
+/* Search + Cart icon buttons */
+.nav-icons {
+    display : flex;
+    gap     : 20px;
+}
+.nav-icons button {
+    background  : none;
+    border      : none;
+    cursor      : pointer;
+    font-size   : 1rem;
+    color       : var(--text-dark);
+    padding     : 4px;
+    transition  : var(--transition);
+}
+.nav-icons button:hover { color : var(--primary-color); }
+
+
+/* ── 6. Hero Section ────────────────────────────────────────
+   Full-width centred banner with 5 shaped images below.
+   Images use .shape-1 / .shape-2 for alternating
+   top-and-bottom rounded corners (Figma spec).
+──────────────────────────────────────────────────────────── */
+.hero {
+    text-align : center;
+    padding    : 80px;
+}
+.hero h1 {
+    font-family    : var(--font-serif);
+    font-size      : 64px;
+    font-weight    : 700;
+    line-height    : 1.2;
+    margin         : 0 auto 20px;
+    max-width      : 800px;
+    text-transform : none;
+}
+.hero p {
+    color      : var(--text-dark);
+    max-width  : 600px;
+    margin     : 0 auto 30px;
+    font-size  : 1.1rem;
+}
+.hero-images {
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+    gap             : 16px;
+    margin-top      : 60px;
+    height          : 350px;
+}
+.hero-img {
+    height      : 100%;
+    object-fit  : cover;
+    width       : 200px;
+    flex-shrink : 0;
+}
+
+/* Alternating rounded-corner shapes for hero images */
+.shape-1 { border-radius : 0 80px 0 80px; }   /* ◜◝ pattern */
+.shape-2 { border-radius : 80px 0 80px 0; }   /* ◟◞ pattern */
+
+
+/* ── 7. Stats Section ───────────────────────────────────────
+   4 equal flex columns with a 1px ::after pseudo-element
+   used as a vertical divider between each item.
+   border-bottom separates the stats band from products.
+──────────────────────────────────────────────────────────── */
+.stats {
+    display         : flex;
+    justify-content : space-between;
+    padding         : 80px;
+    border-bottom   : 1px solid var(--border-color);
+    gap             : 40px;
+}
+.stat-item {
+    display         : flex;
+    flex-direction  : column;
+    align-items     : center;
+    justify-content : center;
+    width           : 214px;
+    height          : 114px;
+    gap             : 8px;
+    flex            : 1;
+    position        : relative;   /* needed for the ::after divider */
+    text-align      : center;
+}
+/* Vertical divider — drawn with ::after to avoid extra HTML */
+.stat-item:not(:last-child)::after {
+    content          : '';
+    position         : absolute;
+    right            : 0;
+    top              : 50%;
+    transform        : translateY(-50%);
+    height           : 50px;
+    width            : 1px;
+    background-color : var(--border-color);
+}
+.stat-item strong {
+    font-family    : 'Inter', sans-serif;
+    font-weight    : 400;      /* intentionally light — Figma spec */
+    font-size      : 64px;
+    line-height    : 1.2;
+    letter-spacing : -0.02em;
+    color          : var(--text-dark);
+    display        : block;
+}
+.stat-item p {
+    font-family : var(--font-serif);
+    font-weight : 400;
+    font-size   : 24px;
+    line-height : 1.2;
+    color       : var(--text-dark);
+    margin      : 0;
+}
+
+
+/* ── 8. Products Section ────────────────────────────────────
+   4-column card grid with a pill-style filter tab bar.
+   The filter-tabs container itself clips to fit-content so
+   the grey pill background never stretches full-width.
+──────────────────────────────────────────────────────────── */
+.products { padding : 80px; }
+
+/* Filter pill bar — tight grey capsule wrapping the 3 buttons */
+.filter-tabs {
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+    gap             : 8px;
+    background-color : var(--bg-light);
+    padding          : 8px;
+    border-radius   : 40px;
+    width           : fit-content;   /* shrink-wraps to content */
+    margin          : 60px auto;     /* centres the pill */
+    /* Allow wrapping on small screens */
+    flex-wrap       : wrap;
+}
+.filter-btn {
+    font-family     : var(--font-sans);
+    font-weight     : 400;
+    font-size       : 24px;
+    line-height     : 1.2;
+    color           : var(--text-dark);
+    min-width       : 180px;
+    height          : 61px;
+    padding         : 16px 40px;
+    border-radius   : 40px;
+    border          : none;
+    background      : transparent;
+    cursor          : pointer;
+    transition      : var(--transition);
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+/* Active tab: white background with subtle elevation shadow */
+.filter-btn.active {
+    background-color : var(--white);
+    color            : var(--text-dark);
+    box-shadow       : 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 4-column product grid */
+.product-grid {
+    display               : grid;
+    grid-template-columns : repeat(4, 1fr);
+    gap                   : 40px;
+}
+.product-card {
+    background    : var(--white);
+    border-radius : 15px;
+    overflow      : hidden;
+    transition    : var(--transition);
+}
+.product-card:hover { transform : translateY(-5px); }
+
+/* Product image — diagonal rounded corners match hero shape style */
+.product-card img {
+    width         : 100%;
+    height        : 220px;
+    object-fit    : cover;
+    border-radius : 0 40px 0 40px;
+}
+
+/* Card text content — horizontal padding aligns with image */
+.product-title {
+    font-family : 'Plus Jakarta Sans', sans-serif;
+    font-weight : 600;
+    font-size   : 24px;
+    line-height : 1.4;
+    color       : var(--text-dark);
+    margin      : 12px 0 4px;
+    padding     : 0 12px;
+}
+.rating {
+    font-family   : var(--font-sans);
+    font-weight   : 700;
+    font-size     : 20px;
+    line-height   : 1.2;
+    color         : var(--text-dark);
+    display       : flex;
+    align-items   : center;
+    gap           : 5px;
+    padding       : 0 12px;
+    margin-bottom : 8px;
+}
+.rating i    { color : var(--color-star); font-size : 18px; } /* gold star */
+.rating span {
+    font-weight : 400;
+    font-size   : 16px;
+    line-height : 1.4;
+    color       : var(--text-dark);
+}
+.product-desc {
+    font-weight   : 400;
+    font-size     : 16px;
+    line-height   : 1.4;
+    color         : var(--text-dark);
+    margin-bottom : 14px;
+    padding       : 0 12px;
+}
+/* Price + Add button row */
+.product-bottom {
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+    padding         : 0 12px 12px;
+}
+.price {
+    font-weight    : 700;
+    font-size      : 20px;
+    line-height    : 1.2;
+    letter-spacing : 0.02em;
+    color          : var(--text-dark);
+}
+/* Small square-ish add-to-cart button */
+.add-btn {
+    background-color : var(--primary-color);
+    color            : var(--white);
+    border           : none;
+    width            : 80px;
+    height           : 32px;
+    border-radius    : 8px;
+    cursor           : pointer;
+    display          : flex;
+    align-items      : center;
+    justify-content  : center;
+    transition       : var(--transition);
+}
+.add-btn:hover { background-color : var(--primary-hover); }
+
+
+/* ── 9. About Section ───────────────────────────────────────
+   2-column grid: text left (wider), images right (narrower).
+   1.1 / 0.9 ratio gives the text column just a bit more room.
+   Images use the same diagonal-corner shape language as the
+   hero and product images.
+──────────────────────────────────────────────────────────── */
+.about {
+    padding    : 80px;
+    border-top : 1px solid var(--border-color);
+}
+.about-content {
+    display               : grid;
+    grid-template-columns : 1.1fr 0.9fr;
+    gap                   : 60px;
+    align-items           : center;
+}
+.about-text p {
+    color         : var(--text-dark);
+    margin-bottom : 20px;
+    font-size     : 1rem;
+}
+.about-text .btn { margin-top : 10px; }
+
+.about-images {
+    display     : flex;
+    gap         : 20px;
+    align-items : center;
+}
+/* Both images share the shape; :last-child applies the height stagger
+   without positional class names like -1/-2 that break when reordered. */
+.about-images img {
+    width         : 50%;
+    height        : 350px;
+    object-fit    : cover;
+    border-radius : 0 120px 0 120px;
+}
+.about-images img:last-child {
+    height : 400px;   /* taller second image creates the overlap effect */
+}
+
+
+/* ── 10. Testimonials Section ───────────────────────────────
+   3-column equal-height card grid.
+   align-items: stretch + li { display: flex } + card { width: 100% }
+   ensures all cards in a row reach the same height regardless
+   of quote length.
+──────────────────────────────────────────────────────────── */
+.testimonials {
+    padding    : 80px;
+    background : var(--white);
+    border-top : 1px solid var(--border-color);
+}
+.testimonial-grid {
+    display               : grid;
+    grid-template-columns : repeat(3, 1fr);
+    gap                   : 40px;
+    align-items           : stretch;
+}
+/* li must be flex so the article inside fills the full height */
+.testimonial-grid li { display : flex; }
+
+.testimonial-card {
+    background    : var(--white);
+    padding       : 30px;
+    border-radius : 15px;
+    border        : 1px solid var(--border-color);
+    box-shadow    : 0 4px 16px rgba(0, 0, 0, 0.05);
+    width         : 100%;   /* fills the flex li */
+}
+/* Reviewer avatar + name row */
+.user-info {
+    display       : flex;
+    align-items   : center;
+    gap           : 15px;
+    margin-bottom : 15px;
+}
+.user-info img {
+    width         : 50px;
+    height        : 50px;
+    border-radius : 50%;
+    object-fit    : cover;
+}
+.user-info h3 {
+    font-family : var(--font-sans);
+    font-size   : 1rem;
+    font-weight : 600;
+    margin-bottom: 2px;
+}
+.user-stars i { color : var(--color-star); font-size : 0.8rem; }
+
+/* blockquote resets the browser's default italic style + margin */
+.testimonial-card blockquote {
+    font-size  : 0.9rem;
+    color      : var(--text-dark);
+    line-height: 1.6;
+    font-style : normal;
+    margin     : 0;
+}
+
+
+/* ── 11. Blog Section ───────────────────────────────────────
+   3-column card grid. The card itself has an asymmetric
+   border-radius (0 96px 0 40px) matching the Figma spec.
+   Card images use the 0 80px 0 80px diagonal corner shape.
+──────────────────────────────────────────────────────────── */
+.blog {
+    padding    : 80px;
+    border-top : 1px solid var(--border-color);
+}
+.blog-grid {
+    display               : grid;
+    grid-template-columns : repeat(3, 1fr);
+    gap                   : 40px;
+    margin-bottom         : 40px;
+}
+.blog-card {
+    border        : 1px solid var(--border-color);
+    border-radius : 0 96px 0 40px;   /* asymmetric Figma shape */
+    padding       : 15px;
+    transition    : var(--transition);
+}
+.blog-card:hover { box-shadow : 0 10px 30px rgba(0, 0, 0, 0.05); }
+
+.blog-card img {
+    width         : 100%;
+    height        : 200px;
+    object-fit    : cover;
+    border-radius : 0 80px 0 80px;   /* top-right + bottom-left only */
+    margin-bottom : 15px;
+}
+/* Meta row: author icon left, date right */
+.blog-meta {
+    display         : flex;
+    justify-content : space-between;
+    font-size       : 0.8rem;
+    color           : var(--text-dark);
+    margin-bottom   : 10px;
+}
+.blog-title {
+    font-family   : var(--font-sans);
+    font-size     : 1.1rem;
+    font-weight   : 600;
+    margin-bottom : 15px;
+    line-height   : 1.4;
+}
+/* "View details →" — right-aligned, serif for style contrast */
+.read-more {
+    display        : flex;
+    justify-content: flex-end;
+    font-size      : 0.8rem;
+    color          : var(--text-dark);
+    text-transform : uppercase;
+    letter-spacing : 1px;
+    font-weight    : 400;
+    font-family    : var(--font-serif);
+}
+.blog-center-btn {
+    display         : flex;
+    justify-content : center;
+    margin-top      : 40px;
+}
+
+
+/* ── 12. Footer ─────────────────────────────────────────────
+   Dark navy-charcoal background.
+   Grid layout: 4 columns in row 1 (brand + 3 nav columns).
+   Brand column spans BOTH rows (grid-row: 1 / span 2) so it
+   vertically aligns with both the nav links AND the subscribe
+   form in row 2.
+──────────────────────────────────────────────────────────── */
+.footer {
+    background-color : var(--footer-bg);
+    color            : var(--white);
+    padding          : 80px;
+    font-size        : 0.9rem;
+}
+.footer-grid {
+    display               : grid;
+    grid-template-columns : 1.5fr 1fr 1fr 1fr;
+    gap                   : 40px;
+    margin-bottom         : 60px;
+}
+
+/* Brand column: spans both grid rows */
+.footer-brand {
+    display        : flex;
+    flex-direction : column;
+    gap            : 32px;
+    grid-row       : 1 / span 2;
+    padding-right  : 40px;   /* visual breathing room from nav columns */
+}
+.footer-brand-info {
+    display        : flex;
+    flex-direction : column;
+    gap            : 15px;
+}
+.footer-logo {
+    font-family : var(--font-sans);
+    font-size   : 48px;
+    font-weight : 600;
+    line-height : 1.2;
+    color       : var(--white);
+    display     : flex;
+    align-items : center;
+    gap         : 10px;
+    margin-bottom: 0;
+}
+.footer-desc {
+    font-family   : var(--font-sans);
+    font-weight   : 400;
+    font-size     : 20px;
+    line-height   : 1.6;
+    color         : var(--white);
+    max-width     : 300px;
+    margin-bottom : 0;
+}
+
+/* <address> overrides — browser default is italic */
+.footer-contact {
+    display        : flex;
+    flex-direction : column;
+    gap            : 5px;
+    font-style     : normal;
+}
+.footer-contact a {
+    font-family : 'Poppins', sans-serif;
+    font-weight : 400;
+    font-size   : 20px;
+    line-height : 1;
+    color       : var(--white);
+    transition  : var(--transition);
+}
+.footer-contact a:hover { color : rgba(255, 255, 255, 0.75); }
+
+/* Column headings (Quick Links / Resources / Social Media) */
+.footer-heading {
+    font-family   : var(--font-serif);
+    font-weight   : 400;
+    font-size     : 28px;
+    line-height   : 1.4;
+    color         : var(--white);
+    margin-bottom : 20px;
+}
+
+/* Footer nav links */
+.footer-links {
+    display        : flex;
+    flex-direction : column;
+    gap            : 15px;
+}
+.footer-links a {
+    font-family : var(--font-sans);
+    font-weight : 400;
+    font-size   : 16px;
+    line-height : 1;
+    color       : var(--white);
+    transition  : var(--transition);
+}
+.footer-links a:hover { color : var(--white); }
+
+/* Social icon circles */
+.social-icons { display : flex; gap : 15px; }
+.social-icons a {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    width           : 48px;
+    height          : 48px;
+    background      : rgba(255, 255, 255, 0.08);
+    color           : var(--white);
+    transition      : var(--transition);
+}
+.social-icons a:hover { background : var(--primary-color); }
+
+/* Subscribe row (columns 2–3, row 2) */
+.subscribe-box {
+    grid-column : 2 / span 2;
+    grid-row    : 2;
+}
+.subscribe-form {
+    display       : flex;
+    background    : rgba(255, 255, 255, 0.08);
+    border-radius : 8px;
+    overflow      : hidden;
+    border        : 1px solid rgba(255, 255, 255, 0.15);
+}
+/* Envelope icon + input grouped in a flex row */
+.subscribe-input-wrapper {
+    display     : flex;
+    align-items : center;
+    flex        : 1;
+    gap         : 10px;
+    padding     : 0 16px;
+}
+.subscribe-input-wrapper i {
+    color      : rgba(255, 255, 255, 0.45);
+    font-size  : 1rem;
+    flex-shrink: 0;
+}
+.subscribe-form input {
+    font-family : 'Poppins', sans-serif;
+    font-weight : 400;
+    font-size   : 16px;
+    flex        : 1;
+    background  : transparent;
+    border      : none;
+    padding     : 14px 0;
+    color   : var(--white);
+    /* outline removed — :focus-within on .subscribe-form handles the visual cue */
+}
+.subscribe-form input::placeholder { color : rgba(255, 255, 255, 0.45); }
+
+.subscribe-form button {
+    background  : var(--primary-color);
+    color       : var(--white);
+    border      : none;
+    padding     : 0 32px;
+    cursor      : pointer;
+    font-family : 'Poppins', sans-serif;
+    font-weight : 500;
+    font-size   : 16px;
+    transition  : var(--transition);
+}
+.subscribe-form button:hover { background : var(--primary-hover); }
+
+
+/* ── 13. Pagination Dots ────────────────────────────────────
+   Small indicator dots below the product and testimonial
+   carousels. JS toggles .active on click.
+──────────────────────────────────────────────────────────── */
+.dots {
+    display     : flex;
+    justify-content : center;
+    align-items : center;
+    gap         : 12px;
+    margin-top  : 30px;
+}
+.dot {
+    width            : 8px;
+    height           : 8px;
+    border-radius    : 50%;
+    background-color : var(--color-dot);
+    border           : 1px solid transparent;
+    cursor           : pointer;
+    transition       : var(--transition);
+}
+.dot.active {
+    background-color : var(--primary-color);
+    transform        : scale(1.1);
+}
+.dot:not(.active):hover { background-color : var(--color-dot-hover); }
+
+
+/* ══════════════════════════════════════════════════════════
+   14. INTERACTIVE ENHANCEMENTS
+   These rules work hand-in-hand with script.js.
+   They are grouped together so they're easy to find during
+   a code review and can be toggled independently.
+══════════════════════════════════════════════════════════ */
+
+/* ·· 14a. Floating Header ··································
+   JS adds `.scrolled` when window.scrollY > 10px.
+   backdrop-filter frosts the header over image sections.   */
+.header.scrolled {
+    box-shadow         : 0 4px 24px rgba(0, 0, 0, 0.08);
+    background         : rgba(255, 255, 255, 0.96);
+    backdrop-filter    : blur(8px);
+    -webkit-backdrop-filter: blur(8px);   /* Safari prefix */
+}
+
+/* ·· 14b. Button Lift & Press Animation ····················
+   Hover → lifts 2px + adds a branded red glow shadow.
+   Active → presses back to baseline (tactile feedback).    */
+/* Merged from the basic .btn:hover above — one block, one source of truth */
+.btn:hover {
+    background-color : var(--primary-hover);
+    transform        : translateY(-2px);
+    box-shadow       : 0 8px 24px var(--primary-shadow);
+}
+.btn:active {
+    transform  : translateY(0);
+    box-shadow : none;
+}
+
+/* ·· 14c. Hamburger Button ·································
+   3 <span> children animate into an × when .active.
+   Hidden on desktop; revealed in the ≤768px media query.   */
+.hamburger {
+    display        : none;   /* desktop: hidden */
+    flex-direction : column;
+    justify-content: center;
+    gap            : 5px;
+    width          : 32px;
+    height         : 32px;
+    background     : none;
+    border         : none;
+    cursor         : pointer;
+    padding        : 0;
+    z-index        : 101;   /* above the nav slide panel */
+}
+.hamburger span {
+    display          : block;
+    height           : 2px;
+    width            : 100%;
+    background-color : var(--text-dark);
+    border-radius    : 2px;
+    transition       : transform 0.3s ease, opacity 0.3s ease;
+    transform-origin : center;
+}
+/* × animation — each bar rotates or fades independently */
+.hamburger.active span:nth-child(1) { transform : translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity : 0; transform : scaleX(0); }
+.hamburger.active span:nth-child(3) { transform : translateY(-7px) rotate(-45deg); }
+
+/* ·· 14d. Dropdown Menu ··································
+   Desktop: opens on :hover / :focus-within (no JS needed).
+   Uses visibility+opacity instead of display so transitions
+   animate smoothly.
+   Mobile: overridden to a static accordion in §16.          */
+.has-dropdown { position : relative; }
+
+.has-dropdown > a {
+    display     : flex;
+    align-items : center;
+    gap         : 6px;
+}
+/* Chevron rotates 180° when dropdown is open */
+.has-dropdown > a .fa-chevron-down {
+    font-size  : 0.65em;
+    transition : transform 0.3s ease;
+}
+.has-dropdown:hover > a .fa-chevron-down,
+.has-dropdown:focus-within > a .fa-chevron-down {
+    transform : rotate(180deg);
+}
+
+/* Dropdown panel — floats below the trigger */
+.dropdown {
+    position      : absolute;
+    top           : calc(100% + 12px);
+    left          : 50%;
+    transform     : translateX(-50%) translateY(-8px);
+    background    : var(--white);
+    border        : 1px solid var(--border-color);
+    border-radius : 12px;
+    padding       : 8px 0;
+    min-width     : 160px;
+    list-style    : none;
+    box-shadow    : 0 8px 32px rgba(0, 0, 0, 0.1);
+    /* Hidden state */
+    visibility    : hidden;
+    opacity       : 0;
+    pointer-events: none;
+    transition    : opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+/* Open — triggered by hover or keyboard focus */
+.has-dropdown:hover .dropdown,
+.has-dropdown:focus-within .dropdown {
+    visibility    : visible;
+    opacity       : 1;
+    pointer-events: auto;
+    transform     : translateX(-50%) translateY(0);
+}
+.dropdown li a {
+    display     : block;
+    padding     : 10px 20px;
+    font-size   : 0.9rem;
+    color       : var(--text-dark);
+    transition  : var(--transition);
+    white-space : nowrap;
+}
+.dropdown li a:hover {
+    background-color: #faf6f5;
+    color           : var(--primary-color);
+    padding-left    : 24px;   /* subtle indent on hover */
+}
+/* Upward caret arrow drawn with ::before pseudo-element */
+.dropdown::before {
+    content   : '';
+    position  : absolute;
+    top       : -6px;
+    left      : 50%;
+    transform : translateX(-50%) rotate(45deg);
+    width     : 10px;
+    height    : 10px;
+    background: var(--white);
+    border-left: 1px solid var(--border-color);
+    border-top : 1px solid var(--border-color);
+}
+
+/* ·· 14e. CSS-Only Tooltips ································
+   data-tooltip="…" on an element renders a floating label.
+   ::after = the bubble, ::before = the tail arrow.
+   No JS required; aria-label already covers accessibility.  */
+[data-tooltip] { position : relative; }
+
+[data-tooltip]::after {
+    content        : attr(data-tooltip);
+    position       : absolute;
+    bottom         : calc(100% + 8px);
+    left           : 50%;
+    transform      : translateX(-50%) translateY(4px);
+    background     : var(--text-dark);
+    color          : var(--white);
+    font-family    : var(--font-sans);
+    font-size      : 0.75rem;
+    font-weight    : 500;
+    white-space    : nowrap;
+    padding        : 5px 10px;
+    border-radius  : 6px;
+    pointer-events : none;
+    opacity        : 0;
+    visibility     : hidden;
+    transition     : opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+/* Tail arrow — a tiny rotated square clipped to a triangle */
+[data-tooltip]::before {
+    content        : '';
+    position       : absolute;
+    bottom         : calc(100% + 3px);
+    left           : 50%;
+    transform      : translateX(-50%) translateY(4px);
+    border         : 5px solid transparent;
+    border-top-color: var(--text-dark);
+    pointer-events : none;
+    opacity        : 0;
+    visibility     : hidden;
+    transition     : opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+/* Reveal both on hover */
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+    opacity    : 1;
+    visibility : visible;
+    transform  : translateX(-50%) translateY(0);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   15. RESPONSIVE — TABLET (≤ 1024px)
+   Adjusts grid columns and font sizes for mid-size screens.
+   The nav still shows (no hamburger yet).
+══════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    /* Reduce outer padding so content breathes on tablet */
+    .header  { padding : 16px 40px; }
+    .hero,
+    .stats,
+    .products,
+    .about,
+    .testimonials,
+    .blog,
+    .footer  { padding : 60px 40px; }
+
+    /* Scale down hero heading */
+    .hero h1       { font-size : 3rem; }
+    .hero-images   { height : 260px; }
+    .hero-img      { width : 160px; }
+
+    /* Stats: scale down the large number */
+    .stat-item strong { font-size : 48px; }
+    .stat-item p      { font-size : 18px; }
+
+    /* Products: 2-column grid at tablet */
+    .product-grid { grid-template-columns : repeat(2, 1fr); }
+
+    /* About: keep 2 columns but tighten the gap */
+    .about-content { gap : 40px; }
+
+    /* Testimonials: 2 columns */
+    .testimonial-grid { grid-template-columns : repeat(2, 1fr); }
+
+    /* Blog: 2 columns */
+    .blog-grid { grid-template-columns : repeat(2, 1fr); }
+
+    /* Footer: collapse to 2 columns */
+    .footer-grid {
+        grid-template-columns : 1fr 1fr;
+        grid-template-rows    : auto auto auto;
+    }
+    /* Brand column fills the full first row on tablet */
+    .footer-brand {
+        grid-column : 1 / span 2;
+        grid-row    : 1;
+        padding-right : 0;
+    }
+    /* Subscribe fills the full last row on tablet */
+    .subscribe-box {
+        grid-column : 1 / span 2;
+        grid-row    : 3;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   16. RESPONSIVE — MOBILE (≤ 768px)
+   Hamburger menu replaces horizontal nav.
+   Nav links animate in as a slide-down overlay panel.
+   Dropdown reverts to an inline accordion.
+══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* Tighten padding further for phone screens */
+    .header  { padding : 14px 20px; }
+    .hero,
+    .stats,
+    .products,
+    .about,
+    .testimonials,
+    .blog,
+    .footer  { padding : 48px 20px; }
+
+    /* ── Hamburger button: reveal on mobile ── */
+    .hamburger { display : flex; }
+
+    /* ── Mobile Nav Panel ──────────────────────────────────
+       Full-width overlay that slides down from under the header.
+       max-height animation is the only reliable way to animate
+       from height:0 to height:auto in CSS.                    */
+    .nav-links {
+        position      : absolute;
+        top           : 100%;
+        left          : 0;
+        right         : 0;
+        background    : var(--white);
+        flex-direction: column;
+        border-bottom : 1px solid var(--border-color);
+        box-shadow    : 0 8px 24px rgba(0, 0, 0, 0.06);
+        max-height    : 0;
+        overflow      : hidden;
+        opacity       : 0;
+        transition    : max-height 0.35s ease, opacity 0.3s ease, padding 0.3s ease;
+    }
+    /* .open toggled by JS when hamburger is clicked */
+    .nav-links.open { max-height : 400px; opacity : 1; padding : 16px 0; }
+
+    .nav-links li  { width : 100%; }
+    .nav-links a   { padding : 12px 24px; font-size : 1rem; display : block; }
+
+    /* ── Mobile Dropdown Accordion ─────────────────────────
+       On mobile the dropdown is re-positioned as static so it
+       flows inside the nav panel rather than floating above it. */
+    .dropdown {
+        position      : static;
+        transform     : none !important;   /* cancel desktop translateX */
+        box-shadow    : none;
+        border        : none;
+        border-left   : 2px solid var(--border-color);
+        border-radius : 0;
+        margin-left   : 24px;
+        visibility    : visible;
+        opacity       : 1;
+        pointer-events: auto;
+        max-height    : 0;
+        overflow      : hidden;
+        transition    : max-height 0.3s ease;
+        padding       : 0;
+    }
+    /* .has-dropdown.open toggled by JS on mobile tap */
+    .has-dropdown.open .dropdown { max-height : 200px; }
+
+    /* Hide the desktop caret arrow — not needed in accordion */
+    .dropdown::before { display : none; }
+
+    /* Tooltips: disable on phones (touch has no hover) */
+    [data-tooltip]::after,
+    [data-tooltip]::before { display : none; }
+
+    /* ── Layout adjustments ── */
+    .hero h1       { font-size : 2.5rem; }
+    .hero p        { font-size : 1rem; }
+    /* Hero images hidden on mobile — too cramped */
+    .hero-images   { display : none; }
+
+    /* Stats: single column stack */
+    .stats         { flex-direction : column; gap : 30px; border-bottom : none; }
+    .stat-item {
+        width         : 100%;
+        border-right  : none;
+        border-bottom : 1px solid var(--border-color);
+        padding-bottom: 20px;
+    }
+    .stat-item strong { font-size : 40px; }
+
+    /* Filter tabs: allow button wrapping on small screens */
+    .filter-btn    { min-width : 120px; font-size : 18px; height : 48px; }
+
+    /* About: single column, text centred */
+    .about-content { grid-template-columns : 1fr; text-align : center; }
+    .about-images     { justify-content : center; }
+    .about-images img { height : 250px; }   /* equalise heights in single-column */
+
+    /* Testimonials & Blog: single column */
+    .testimonial-grid       { grid-template-columns : 1fr; }
+    .testimonial-grid li    { display : block; }
+    .blog-grid              { grid-template-columns : 1fr; }
+
+    /* Footer: single column */
+    .footer-grid            { grid-template-columns : 1fr; }
+    .footer-brand           { grid-column : 1; grid-row : auto; padding-right : 0; }
+    .subscribe-box          { grid-column : 1; grid-row : auto; }
+    .footer-logo            { font-size : 32px; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   17. RESPONSIVE — SMALL PHONE (≤ 480px)
+   Extra micro-adjustments for phones under 480px wide.
+══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    /* Heading size cap so text never overflows the viewport */
+    .hero h1    { font-size : 2rem; }
+
+    /* Buttons scale down slightly on very narrow screens */
+    .btn        { padding : 16px 28px; font-size : 18px; }
+
+    /* Products: single column with tighter gap */
+    .product-grid { grid-template-columns : 1fr; gap : 24px; }
+
+    /* Blog: single column */
+    .blog-grid  { grid-template-columns : 1fr; }
+
+    /* Stat numbers — further reduced to prevent overflow */
+    .stat-item strong { font-size : 32px; }
+    .stat-item p      { font-size : 16px; }
+
+    /* Filter tabs: narrower at tiny sizes */
+    .filter-btn { min-width : 90px; font-size : 16px; padding : 12px 20px; }
+}
